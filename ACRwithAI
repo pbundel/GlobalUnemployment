@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ahmedabad Crash: An Interactive Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Somber Professional -->
+    <!-- Application Structure Plan: A narrative, single-page "scrollytelling" structure will be used to guide the user through the tragic event and its aftermath. The flow is designed for clarity and respect for the subject matter: 1. Hero section with key facts. 2. An interactive flight timeline for the final moments. 3. A data visualization section for the casualties. 4. A tabbed interface to organize the complex investigation details. 5. A visual timeline for the investigation process. This thematic and chronological approach is superior to a dashboard for this type of event, as it prioritizes understanding a story over just viewing data points. -->
+    <!-- Visualization & Content Choices: The application will use a mix of presentation methods to achieve different goals. Key Stats (Inform): HTML stat cards. Flight Sequence (Change): Interactive JS-powered timeline. Casualties (Compare): Chart.js Donut chart for onboard vs. ground fatalities. Investigation Details (Organize): Tabbed interface using JS to toggle content. Investigation Timeline (Inform): HTML/CSS visual timeline. All choices are made to present the information clearly and respectfully, without overwhelming the user. CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #1e3a8a; /* dark blue */
+            border-bottom-color: #1e3a8a;
+        }
+        .tab-button.active {
+            background-color: #1e3a8a;
+            color: white;
+        }
+        .timeline-item-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .timeline-item-content.expanded {
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-blue-900">AI171 Crash Report</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#overview" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 border-b-2 border-transparent">Overview</a>
+                        <a href="#timeline" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 border-b-2 border-transparent">Final Moments</a>
+                        <a href="#impact" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 border-b-2 border-transparent">Impact</a>
+                        <a href="#investigation" class="nav-link px-3 py-2 text-sm font-medium text-slate-700 border-b-2 border-transparent">Investigation</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto py-8 sm:px-6 lg:px-8">
+        
+        <!-- Overview Section -->
+        <section id="overview" class="scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-blue-900 tracking-tight sm:text-5xl">Tragedy in Ahmedabad</h2>
+                <p class="mt-4 text-lg text-slate-600">On June 12, 2025, Air India Flight 171 crashed moments after takeoff, resulting in a devastating loss of life. This report details the incident, its aftermath, and the ongoing investigation.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="text-5xl font-bold text-amber-600">280+</p>
+                    <p class="mt-2 text-lg font-semibold text-slate-700">Total Fatalities</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="text-5xl font-bold text-blue-800">1</p>
+                    <p class="mt-2 text-lg font-semibold text-slate-700">Survivor Onboard</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="text-5xl font-bold text-slate-700">~45</p>
+                    <p class="mt-2 text-lg font-semibold text-slate-700">Seconds Airborne</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section id="timeline" class="mt-20 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-blue-900 tracking-tight">The Final Moments</h2>
+                <p class="mt-4 text-lg text-slate-600">The flight was airborne for less than a minute. Click on each event to reveal more details about the critical sequence.</p>
+            </div>
+            <div class="relative w-full max-w-2xl mx-auto">
+                <div class="absolute left-1/2 w-0.5 h-full bg-slate-300"></div>
+                <div class="space-y-12">
+                    
+                    <div class="timeline-item relative">
+                        <div class="absolute left-1/2 -ml-4 w-8 h-8 rounded-full bg-blue-800 border-4 border-slate-100"></div>
+                        <div class="ml-[calc(50%+2rem)] md:mr-[calc(50%+2rem)] md:ml-0 p-4 bg-white rounded-lg shadow-md md:text-right">
+                            <h3 class="font-bold text-lg text-blue-900">1:38 PM: Takeoff</h3>
+                            <p class="cursor-pointer text-sm text-blue-700 hover:underline" onclick="toggleTimeline(this)">Show Details</p>
+                            <div class="timeline-item-content text-left">
+                                <p class="mt-2 text-slate-600">Flight AI171 begins its takeoff roll on runway 23 at Ahmedabad Airport. The aircraft exhausts the entire 3.5km runway, indicating a potential struggle to gain sufficient power for lift-off.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item relative">
+                        <div class="absolute left-1/2 -ml-4 w-8 h-8 rounded-full bg-amber-600 border-4 border-slate-100"></div>
+                        <div class="mr-[calc(50%+2rem)] md:ml-[calc(50%+2rem)] p-4 bg-white rounded-lg shadow-md">
+                            <h3 class="font-bold text-lg text-blue-900">~30s Airborne: Emergency</h3>
+                             <p class="cursor-pointer text-sm text-blue-700 hover:underline" onclick="toggleTimeline(this)">Show Details</p>
+                            <div class="timeline-item-content">
+                                <p class="mt-2 text-slate-600">The aircraft reaches a maximum altitude of just 625 feet. Visual evidence suggests the Ram Air Turbine (RAT) deploys, a sign of critical power loss. The pilot sends a distress call.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                     <div class="timeline-item relative">
+                        <div class="absolute left-1/2 -ml-4 w-8 h-8 rounded-full bg-red-700 border-4 border-slate-100"></div>
+                        <div class="ml-[calc(50%+2rem)] md:mr-[calc(50%+2rem)] md:ml-0 p-4 bg-white rounded-lg shadow-md md:text-right">
+                            <h3 class="font-bold text-lg text-blue-900">Final Communication</h3>
+                            <p class="cursor-pointer text-sm text-blue-700 hover:underline" onclick="toggleTimeline(this)">Show Details</p>
+                            <div class="timeline-item-content text-left">
+                                <p class="mt-2 text-slate-600 font-mono italic">"Mayday! Mayday! Thrust not achieved falling Mayday! Mayday! Mayday!"</p>
+                                <p class="text-slate-500 text-sm mt-1">- Final words received by ATC.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item relative">
+                        <div class="absolute left-1/2 -ml-4 w-8 h-8 rounded-full bg-slate-800 border-4 border-slate-100"></div>
+                        <div class="mr-[calc(50%+2rem)] md:ml-[calc(50%+2rem)] p-4 bg-white rounded-lg shadow-md">
+                            <h3 class="font-bold text-lg text-blue-900">Impact</h3>
+                            <p class="cursor-pointer text-sm text-blue-700 hover:underline" onclick="toggleTimeline(this)">Show Details</p>
+                            <div class="timeline-item-content">
+                                <p class="mt-2 text-slate-600">The aircraft crashes into the B. J. Medical College hostel block, resulting in a catastrophic fire and the collapse of parts of the structure.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Impact Section -->
+        <section id="impact" class="mt-20 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-blue-900 tracking-tight">Human Cost & Scene Severity</h2>
+                <p class="mt-4 text-lg text-slate-600">The crash had a devastating impact both on those aboard the flight and on the ground. The post-crash fire severely complicated rescue and recovery efforts.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-blue-900 mb-4 text-center">Breakdown of Fatalities</h3>
+                    <div class="chart-container relative h-64 md:h-80 mx-auto max-w-sm">
+                        <canvas id="casualtiesChart"></canvas>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="font-bold text-lg text-blue-900">Extreme Conditions</h4>
+                        <p class="mt-2 text-slate-600">The post-crash fire reached temperatures up to 1,500°C. This extreme heat led to severe charring of the wreckage and posed significant challenges for identifying victims and recovering critical evidence like the black boxes.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="font-bold text-lg text-blue-900">The Sole Survivor</h4>
+                        <p class="mt-2 text-slate-600">Miraculously, one passenger survived the initial impact and was rescued from the wreckage. Their survival is a rare exception in an otherwise catastrophic event.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Investigation Section -->
+        <section id="investigation" class="mt-20 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-blue-900 tracking-tight">The Investigation</h2>
+                <p class="mt-4 text-lg text-slate-600">A multi-national effort is underway to determine the cause of the crash. Explore the key areas of the formal inquiry.</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="mb-4 border-b border-slate-200">
+                    <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                        <button class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-slate-500 hover:text-blue-700 hover:border-slate-300 active" data-tab="blackbox">The Black Boxes</button>
+                        <button class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-slate-500 hover:text-blue-700 hover:border-slate-300" data-tab="investigators">The Investigators</button>
+                        <button class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-slate-500 hover:text-blue-700 hover:border-slate-300" data-tab="questions">Key Questions</button>
+                    </nav>
+                </div>
+
+                <div id="tab-content">
+                    <div class="tab-pane active" id="blackbox">
+                        <h3 class="font-bold text-lg text-blue-900 mb-2">Crucial Evidence Under Challenge</h3>
+                        <p class="text-slate-600 mb-4">The two "black boxes"—the Flight Data Recorder (FDR) and Cockpit Voice Recorder (CVR)—are the most critical pieces of evidence. Both sets were recovered but sustained significant external damage from the fire and impact.</p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-600">
+                            <li><span class="font-semibold">FDR:</span> Records hundreds of technical parameters, such as engine performance, altitude, speed, and control inputs.</li>
+                            <li><span class="font-semibold">CVR:</span> Captures all audio from the cockpit, including pilot conversations, alarms, and communications with ATC.</li>
+                            <li><span class="font-semibold">Decoding Challenge:</span> Due to the damage, there is ongoing assessment on whether the data must be extracted at a specialized facility abroad to ensure no information is lost.</li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane hidden" id="investigators">
+                        <h3 class="font-bold text-lg text-blue-900 mb-2">A Global Effort</h3>
+                        <p class="text-slate-600 mb-4">The investigation is a collaborative effort led by India's AAIB, adhering to international protocols.</p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-600">
+                            <li><span class="font-semibold">Lead Agency:</span> Aircraft Accident Investigation Bureau (AAIB) of India.</li>
+                            <li><span class="font-semibold">International Partners:</span> Experts from the US National Transportation Safety Board (NTSB), the UK's Air Accidents Investigation Branch (AAIB), and manufacturers Boeing (airframe) and GE Aerospace (engines) are providing technical assistance.</li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane hidden" id="questions">
+                        <h3 class="font-bold text-lg text-blue-900 mb-2">Focus of the Inquiry</h3>
+                        <p class="text-slate-600 mb-4">Investigators are analyzing several potential scenarios to piece together the chain of events.</p>
+                         <ul class="list-disc list-inside space-y-2 text-slate-600">
+                            <li><span class="font-semibold">Engine Performance:</span> Was there a dual engine failure? The "no thrust" call and RAT deployment strongly suggest this possibility. Fuel contamination is one potential cause being examined.</li>
+                            <li><span class="font-semibold">Aircraft Systems:</span> Did a major electrical or hydraulic failure occur, leading to loss of control?</li>
+                            <li><span class="font-semibold">Aircraft Configuration:</span> Were the wing flaps and landing gear configured correctly for takeoff? The black box data will provide definitive answers to questions raised by initial video footage.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12">
+                 <h3 class="text-2xl font-bold text-blue-900 tracking-tight text-center mb-6">Investigation Timeline</h3>
+                 <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="relative pt-1">
+                        <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                            <div style="width:10%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-800"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-600">
+                            <div class="text-center">
+                                <p class="font-semibold">Crash</p>
+                                <p>June 12, 2025</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="font-semibold">Preliminary Report</p>
+                                <p>Expected by mid-July 2025</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="font-semibold">Final Report</p>
+                                <p>Expected in ~1 year</p>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+
+        </section>
+    </main>
+    <footer class="bg-white mt-12">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-slate-500 text-sm">
+            <p>&copy; 2025 AI171 Crash Report. Information compiled from public records for informational purposes.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chartCtx = document.getElementById('casualtiesChart').getContext('2d');
+            new Chart(chartCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Fatalities Onboard', 'Fatalities on Ground'],
+                    datasets: [{
+                        data: [241, 39],
+                        backgroundColor: [
+                            '#1e3a8a', // Dark Blue
+                            '#f59e0b'  // Amber
+                        ],
+                        borderColor: '#f1f5f9',
+                        borderWidth: 4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#475569',
+                                font: {
+                                    size: 14,
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            bodyFont: {
+                                family: 'Inter'
+                            },
+                            titleFont: {
+                                family: 'Inter'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    tabPanes.forEach(pane => {
+                        if (pane.id === tabId) {
+                            pane.classList.remove('hidden');
+                            pane.classList.add('active');
+                        } else {
+                            pane.classList.add('hidden');
+                            pane.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: '-50% 0px -50% 0px' });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+
+        function toggleTimeline(element) {
+            const content = element.nextElementSibling;
+            content.classList.toggle('expanded');
+            if (content.classList.contains('expanded')) {
+                element.textContent = 'Hide Details';
+            } else {
+                element.textContent = 'Show Details';
+            }
+        }
+    </script>
+</body>
+</html>
